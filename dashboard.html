@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Cadastro</title>
+  <style>
+    :root {
+      --fundo: #f3f5f4;
+      --superficie: #ffffff;
+      --texto: #1c2b28;
+      --suave: #5b6b67;
+      --destaque: #1f6f5c;
+      --borda: #d5ddda;
+      --erro: #b3261e;
+    }
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --fundo: #131a18;
+        --superficie: #1b2522;
+        --texto: #e6eeeb;
+        --suave: #9db0aa;
+        --destaque: #4fb99f;
+        --borda: #2c3a36;
+        --erro: #f2a29b;
+      }
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      padding: 1rem;
+      font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+      background: var(--fundo);
+      color: var(--texto);
+      line-height: 1.5;
+    }
+    main {
+      width: 100%;
+      max-width: 420px;
+      background: var(--superficie);
+      border: 1px solid var(--borda);
+      border-radius: 10px;
+      padding: 2rem;
+    }
+    h1 { margin: 0 0 .25rem; font-size: 1.6rem; }
+    .sub { margin: 0 0 1.5rem; color: var(--suave); }
+    label { display: block; font-weight: 600; margin-bottom: .25rem; }
+    input {
+      width: 100%;
+      font: inherit;
+      color: var(--texto);
+      background: var(--fundo);
+      border: 1px solid var(--borda);
+      border-radius: 6px;
+      padding: .6rem .75rem;
+    }
+    input:focus-visible, button:focus-visible, a:focus-visible {
+      outline: 2px solid var(--destaque);
+      outline-offset: 2px;
+    }
+    input[aria-invalid="true"] { border-color: var(--erro); }
+    .campo { margin-bottom: 1rem; }
+    .erro { color: var(--erro); font-size: .875rem; min-height: 1.25rem; margin: .25rem 0 0; }
+    button {
+      width: 100%;
+      font: inherit;
+      font-weight: 600;
+      color: #fff;
+      background: var(--destaque);
+      border: 0;
+      border-radius: 6px;
+      padding: .7rem;
+      cursor: pointer;
+    }
+    @media (prefers-color-scheme: dark) { button { color: #0e1513; } }
+    .rodape { margin: 1.25rem 0 0; text-align: center; color: var(--suave); }
+    .rodape a { color: var(--destaque); }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>Criar conta</h1>
+    <p class="sub">Preencha os dados abaixo para se cadastrar.</p>
+ 
+    <form id="form-cadastro" novalidate>
+      <div class="campo">
+        <label for="nome">Nome completo</label>
+        <input type="text" id="nome" name="nome" autocomplete="name" required>
+        <p class="erro" id="erro-nome"></p>
+      </div>
+ 
+      <div class="campo">
+        <label for="email">E-mail</label>
+        <input type="email" id="email" name="email" autocomplete="email" required>
+        <p class="erro" id="erro-email"></p>
+      </div>
+ 
+      <div class="campo">
+        <label for="senha">Senha</label>
+        <input type="password" id="senha" name="senha" autocomplete="new-password" minlength="8" required>
+        <p class="erro" id="erro-senha"></p>
+      </div>
+ 
+      <div class="campo">
+        <label for="confirmar">Confirmar senha</label>
+        <input type="password" id="confirmar" name="confirmar" autocomplete="new-password" required>
+        <p class="erro" id="erro-confirmar"></p>
+      </div>
+ 
+      <button type="submit">Criar conta</button>
+    </form>
+ 
+    <p class="rodape">Já tem conta? <a href="login.html">Entrar</a></p>
+  </main>
+ 
+  <script>
+    const form = document.getElementById("form-cadastro");
+ 
+    function mostrarErro(campo, mensagem) {
+      const input = document.getElementById(campo);
+      document.getElementById("erro-" + campo).textContent = mensagem;
+      input.setAttribute("aria-invalid", mensagem ? "true" : "false");
+      return !mensagem;
+    }
+ 
+    function validar() {
+      const nome = form.nome.value.trim();
+      const email = form.email.value.trim();
+      const senha = form.senha.value;
+      const confirmar = form.confirmar.value;
+ 
+      const resultados = [
+        mostrarErro("nome", nome.length < 3 ? "Informe seu nome completo." : ""),
+        mostrarErro("email", /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) ? "" : "Informe um e-mail válido."),
+        mostrarErro("senha", senha.length < 8 ? "A senha deve ter pelo menos 8 caracteres." : ""),
+        mostrarErro("confirmar", senha !== confirmar ? "As senhas não coincidem." : "")
+      ];
+      return resultados.every(Boolean);
+    }
+ 
+    form.addEventListener("submit", function (evento) {
+      evento.preventDefault();
+      if (!validar()) return;
+ 
+      const dados = {
+        nome: form.nome.value.trim(),
+        email: form.email.value.trim(),
+        senha: form.senha.value
+      };
+ 
+      // TODO: enviar `dados` ao seu back-end (ex.: fetch("/api/cadastro", { method: "POST", ... })).
+      // Não guarde a senha no navegador (localStorage/sessionStorage).
+      console.log("Cadastro pronto para envio:", { nome: dados.nome, email: dados.email });
+ 
+      window.location.href = "login.html";
+    });
+  </script>
+</body>
+</html>
