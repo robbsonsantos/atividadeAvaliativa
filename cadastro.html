@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Dashboard</title>
+  <style>
+    :root {
+      --fundo: #f3f5f4;
+      --superficie: #ffffff;
+      --texto: #1c2b28;
+      --suave: #5b6b67;
+      --destaque: #1f6f5c;
+      --borda: #d5ddda;
+    }
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --fundo: #131a18;
+        --superficie: #1b2522;
+        --texto: #e6eeeb;
+        --suave: #9db0aa;
+        --destaque: #4fb99f;
+        --borda: #2c3a36;
+      }
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+      background: var(--fundo);
+      color: var(--texto);
+      line-height: 1.5;
+    }
+    header {
+      background: var(--superficie);
+      border-bottom: 1px solid var(--borda);
+    }
+    .barra {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 0 1rem;
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+      flex-wrap: wrap;
+    }
+    .marca { font-weight: 700; padding: 1rem 0; }
+    nav { display: flex; gap: .25rem; flex: 1; flex-wrap: wrap; }
+    nav a {
+      color: var(--suave);
+      text-decoration: none;
+      padding: 1rem .75rem;
+      border-bottom: 3px solid transparent;
+    }
+    nav a:hover { color: var(--texto); }
+    nav a[aria-current="page"] {
+      color: var(--texto);
+      border-bottom-color: var(--destaque);
+    }
+    nav a:focus-visible, button:focus-visible {
+      outline: 2px solid var(--destaque);
+      outline-offset: 2px;
+    }
+    button {
+      font: inherit;
+      color: var(--texto);
+      background: none;
+      border: 1px solid var(--borda);
+      border-radius: 6px;
+      padding: .4rem .9rem;
+      cursor: pointer;
+    }
+    button:hover { border-color: var(--destaque); }
+    main { max-width: 960px; margin: 0 auto; padding: 2.5rem 1rem; }
+    h1 { margin: 0 0 .5rem; font-size: clamp(1.6rem, 4vw, 2.25rem); }
+    p { margin: 0; color: var(--suave); max-width: 60ch; }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="barra">
+      <span class="marca">Meu Sistema</span>
+      <nav aria-label="Menu principal">
+        <a href="dashboard.html" aria-current="page">Início</a>
+        <a href="perfil.html">Perfil</a>
+        <a href="relatorios.html">Relatórios</a>
+        <a href="configuracoes.html">Configurações</a>
+      </nav>
+      <button type="button" id="sair">Sair</button>
+    </div>
+  </header>
+
+  <main>
+    <h1 id="boas-vindas">Carregando…</h1>
+    <p>Use o menu acima para navegar pelo sistema.</p>
+  </main>
+
+  <script>
+    // Lê o usuário salvo no login. Ajuste a chave e o formato
+    // conforme o seu back-end (ex.: resposta da API de autenticação).
+    function obterUsuario() {
+      try {
+        return JSON.parse(sessionStorage.getItem("usuario"));
+      } catch (e) {
+        return null;
+      }
+    }
+
+    const usuario = obterUsuario();
+
+    if (!usuario || !usuario.nome) {
+      // Sem login: volta para a tela de autenticação.
+      window.location.replace("login.html");
+    } else {
+      document.getElementById("boas-vindas").textContent =
+        "Bem-vindo(a), " + usuario.nome + "!";
+    }
+
+    document.getElementById("sair").addEventListener("click", function () {
+      sessionStorage.removeItem("usuario");
+      window.location.replace("login.html");
+    });
+  </script>
+</body>
+</html>
